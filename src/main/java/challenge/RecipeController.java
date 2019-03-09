@@ -1,47 +1,62 @@
 package challenge;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping(value = "/recipe")
 
 public class RecipeController {
 
 	@Autowired
 	private RecipeService service;
 
-	public Recipe save() {
-		return service.save(null);
+	@PostMapping
+	public Recipe save(@RequestBody Recipe recipe) {
+		return service.save(recipe);
 	}
 
-	public void update() {
-		service.update(null, null);
+	@PutMapping(value = "/{id}")
+	public void update(@PathVariable String id, @RequestBody Recipe recipe) {
+		service.update(id, recipe);
 	}
 
-	public void delete() {
-		service.delete(null);
+	@DeleteMapping(value = "/{id}")
+	public void delete(@PathVariable String id) {
+		service.delete(id);
 	}
 
-	public Recipe get() {
-		return service.get(null);
+	@GetMapping(value = "/{id}")
+	public Optional<Recipe> get(@PathVariable String id) {
+		return service.get(id);
 	}
 
-	public List<Recipe> listByIngredient() {
-		return service.listByIngredient(null);
+	@GetMapping(value = "/ingredient")
+	public List<Recipe> listByIngredient(@RequestParam String ingredient) {
+		return service.listByIngredient(ingredient);
 	}
 
-	public List<Recipe> search() {
-		return service.search(null);
+	@GetMapping(value = "/search")
+	public List<Recipe> search(@RequestParam String search) {
+		return service.search(search);
 	}
 
-	public void like() {
-		service.like(null, null);
+	@PostMapping(value = "/{id}/like/{userId}")
+	public void like(@PathVariable String id, @PathVariable String userId) {
+		service.like(id, userId);
 	}
 
-	public void unlike() {
-		service.unlike(null, null);
+	@RequestMapping(value="/{id}/like/{userId}",method={RequestMethod.GET,RequestMethod.DELETE})
+	public void unlike(@PathVariable String id, @PathVariable String userId) {
+		service.unlike(id, userId);
 	}
 
-	public RecipeComment addComment() {
-		return service.addComment(null, null);
+	@PostMapping("/{id}/comment")
+	public RecipeComment addComment(@PathVariable String id, @RequestBody RecipeComment comment) {
+		return service.addComment(id, comment);
 	}
 
 	public void updateComment() {
